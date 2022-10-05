@@ -7,7 +7,12 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    @all_ratings = Movie.all_ratings
+    session[:ratings] = @all_ratings.each_with_object({}) {|v,h| h[v]=1}
+    redirect_to movies_path({:ratings => session[:ratings]}) unless params[:ratings]
+    @ratings_to_show = params[:ratings] ? params[:ratings].keys : []
+    @movies = Movie.with_ratings(@ratings_to_show)
+    session[:ratings] = params[:ratings]
   end
 
   def new
