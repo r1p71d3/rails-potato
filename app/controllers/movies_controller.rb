@@ -7,9 +7,9 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = Movie.all_ratings
     session[:ratings] ||= @all_ratings.each_with_object({}) {|v,h| h[v]=1}
     if params[:home]
-      @all_ratings = Movie.all_ratings
       session[:ratings] = @all_ratings.each_with_object({}) {|v,h| h[v]=1}
       redirect_to movies_path({:sort_by => session[:sort_by], :ratings => session[:ratings], :home=>1}) unless params[:ratings] || params[:sort_by]
       @ratings_to_show = params[:ratings] ? params[:ratings].keys : []
